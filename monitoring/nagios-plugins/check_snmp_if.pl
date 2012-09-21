@@ -34,7 +34,8 @@ my $VERSION="1.0";
 
 ## Opts
 my $np = Nagios::Plugin->new(
-  usage => "Usage: $NAME [--host|-H <host>] [--port|-p <port>] [--community|-C <community>] [-c|--critical <critical>] [-w|--warning <warning>] [--if|-i <interface name>]",
+  ##usage => "Usage: $NAME [--host|-H <host>] [--port|-p <port>] [--community|-C <community>] [-c|--critical <critical>] [-w|--warning <warning>] [--if|-i <interface name>]",
+  usage => "Usage: $NAME [--host|-H <host>] [--port|-p <port>] [--community|-C <community>] [--if|-i <interface name>]",
   version => $VERSION,
   blurb => 'Check interface traffic',
 );
@@ -62,12 +63,12 @@ $np->add_arg(
 $np->add_arg(
   spec     => 'warning|w=s',
   help     => 'Warning threshold',
-  required => 1,
+  required => 0,
 );
 $np->add_arg(
   spec     => 'if|i=s',
   help     => 'Interface name',
-  required => 1,
+  required => 0,
 );
 
 $np->getopts();

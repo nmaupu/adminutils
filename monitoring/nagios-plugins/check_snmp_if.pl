@@ -58,7 +58,7 @@ $np->add_arg(
 $np->add_arg(
   spec     => 'critical|c=s',
   help     => 'Critical threshold',
-  required => 1,
+  required => 0,
 );
 $np->add_arg(
   spec     => 'warning|w=s',
@@ -68,7 +68,7 @@ $np->add_arg(
 $np->add_arg(
   spec     => 'if|i=s',
   help     => 'Interface name',
-  required => 0,
+  required => 1,
 );
 
 $np->getopts();

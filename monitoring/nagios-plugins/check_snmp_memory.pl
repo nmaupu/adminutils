@@ -103,7 +103,8 @@ my $result = $session->get_request(-varbindlist =>
 ## Values ares in KB !!!
 my $ram_total     = $result->{$oid_total}*1024;
 my $ram_free      = $result->{$oid_free}*1024;
-my $ram_shared    = $result->{$oid_shared}*1024;
+## No shared info on some distros
+my $ram_shared    = $result->{$oid_shared} ? $result->{$oid_shared}*1024 : 0;
 my $ram_buffered  = $result->{$oid_buffered}*1024;
 my $ram_cached    = $result->{$oid_cached}*1024;
 my $swap_total    = $result->{$oid_swtotal}*1024;

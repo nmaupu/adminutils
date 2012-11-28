@@ -88,9 +88,9 @@ if (!defined($session)) {
 }
 
 ## OIDs
-my $oid_if_names   = ".1.3.6.1.2.1.2.2.1.2";
-my $oid_in_values  = ".1.3.6.1.2.1.2.2.1.10";
-my $oid_out_values = ".1.3.6.1.2.1.2.2.1.16";
+my $oid_if_names   = ".1.3.6.1.2.1.31.1.1.1.1";
+my $oid_in_values  = ".1.3.6.1.2.1.31.1.1.1.6";
+my $oid_out_values = ".1.3.6.1.2.1.31.1.1.1.10";
 
 ## Looking for if name
 my $if_names = $session->get_table(-baseoid => $oid_if_names);

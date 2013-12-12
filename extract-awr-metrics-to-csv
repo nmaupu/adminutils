@@ -26,6 +26,10 @@
 ##        - the summary extracted before
 ##      Example : 
 ##        ./extract-awr-metrics-to-csv.py filename.html "This table displays top SQL by number of parse calls"
+##      
+##      This script requires the following python modules :
+##        - HTMLParser
+##        - forked-path
 ##########
 
 from HTMLParser import HTMLParser

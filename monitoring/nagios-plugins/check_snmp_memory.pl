@@ -101,19 +101,19 @@ my $result = $session->get_request(-varbindlist =>
   [$oid_total, $oid_free, $oid_shared, $oid_buffered, $oid_cached, $oid_swtotal, $oid_swfree]);
 
 ## Values ares in KB !!!
-my $ram_total     = $result->{$oid_total}*1024;
-my $ram_free      = $result->{$oid_free}*1024;
+my $ram_total     = $result->{$oid_total} ? $result->{$oid_total}*1024 : 0;
+my $ram_free      = $result->{$oid_free} ? $result->{$oid_free}*1024 : 0;
 ## No shared info on some distros
 my $ram_shared    = $result->{$oid_shared} ? $result->{$oid_shared}*1024 : 0;
-my $ram_buffered  = $result->{$oid_buffered}*1024;
-my $ram_cached    = $result->{$oid_cached}*1024;
-my $swap_total    = $result->{$oid_swtotal}*1024;
-my $swap_free     = $result->{$oid_swfree}*1024;
+my $ram_buffered  = $result->{$oid_buffered} ? $result->{$oid_buffered}*1024 : 0;
+my $ram_cached    = $result->{$oid_cached} ? $result->{$oid_cached}*1024 : 0;
+my $swap_total    = $result->{$oid_swtotal} ? $result->{$oid_swtotal}*1024 : 0;
+my $swap_free     = $result->{$oid_swfree} ? $result->{$oid_swfree}*1024 : 0;
 my $swap_used     = $swap_total - $swap_free;
 my $ram_bufs      = $ram_shared + $ram_buffered + $ram_cached;
 my $ram_used      = $ram_total - $ram_free - $ram_bufs;
 
-my $percent_used  = sprintf("%.2f", ($ram_used * 100) / $ram_total);
+my $percent_used  = $ram_total != 0 ? sprintf("%.2f", ($ram_used * 100) / $ram_total) : "undef";
 
 my $warning_bytes  = ($ram_total * $np->opts->warning) / 100;
 my $critical_bytes = ($ram_total * $np->opts->critical) / 100;

@@ -79,13 +79,12 @@ my ($session, $error) = Net::SNMP->session(
       -port      => $np->opts->port,
       -community => $np->opts->community,
       -version   => '2',
-      -timeout   => 10,
+      -timeout   => 3,
     );
 
 if (!defined($session)) {
   $np->nagios_die("ERROR: %s.\n", $error);
 }
-
 
 ## OIDs
 my $oid_total    = '.1.3.6.1.4.1.2021.4.5.0';
@@ -97,8 +96,13 @@ my $oid_swtotal  = '.1.3.6.1.4.1.2021.4.3.0';
 my $oid_swfree   = '.1.3.6.1.4.1.2021.4.4.0';
 
 $session->translate(Net::SNMP->TRANSLATE_NONE);
+
 my $result = $session->get_request(-varbindlist => 
   [$oid_total, $oid_free, $oid_shared, $oid_buffered, $oid_cached, $oid_swtotal, $oid_swfree]);
+
+if (!defined($result)) {
+  $np->nagios_die("Error getting values from SNMP, timeout reaching host.\n");
+}
 
 ## Values ares in KB !!!
 my $ram_total     = $result->{$oid_total} ? $result->{$oid_total}*1024 : 0;
@@ -179,3 +183,4 @@ if($percent_used > $np->opts->critical) {
 $np->nagios_exit($exit_status, "RAM used : $percent_used%, Swap used : $percent_swap_used%");
 
 __END__
+

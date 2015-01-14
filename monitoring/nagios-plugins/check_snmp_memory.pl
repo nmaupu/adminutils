@@ -166,7 +166,7 @@ $np->add_perfdata(
 );
 
 
-my $percent_swap_used = sprintf("%.2f", $swap_used*100 / $swap_total);
+my $percent_swap_used = $swap_total != 0 ? sprintf("%.2f", $swap_used*100 / $swap_total) : "undef";
 
 my $exit_status = OK;
 

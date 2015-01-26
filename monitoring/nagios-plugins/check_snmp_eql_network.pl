@@ -80,6 +80,7 @@ if (!defined($session)) {
 ## IF-MIB::ifOperStatus
 my $oid_ifs_index       = '.1.3.6.1.2.1.2.2.1.2';
 my $oid_if_oper_status  = '.1.3.6.1.2.1.2.2.1.8';
+my $oid_if_mtu          = '.1.3.6.1.2.1.2.2.1.4';
 my $oid_if_in_octets    = '.1.3.6.1.2.1.2.2.1.10';
 my $oid_if_out_octets   = '.1.3.6.1.2.1.2.2.1.16';
 my $oid_if_in_errors    = '.1.3.6.1.2.1.2.2.1.14';
@@ -113,6 +114,7 @@ if($idx == -1) {
 
 ## Getting values
 my $oid_status       = $oid_if_oper_status.".".$idx;
+$oid_if_mtu          = $oid_if_mtu.".".$idx;
 $oid_if_in_octets    = $oid_if_in_octets.".".$idx;
 $oid_if_out_octets   = $oid_if_out_octets.".".$idx;
 $oid_if_in_errors    = $oid_if_in_errors.".".$idx;
@@ -122,6 +124,7 @@ $oid_if_out_discards = $oid_if_out_discards.".".$idx;
 
 my $result = $session->get_request(-varbindlist => [
 	$oid_status,
+	$oid_if_mtu,
 	$oid_if_in_octets,
 	$oid_if_out_octets,
 	$oid_if_in_errors,
@@ -167,14 +170,16 @@ $np->add_perfdata(
 );
 
 my $if_status = $result->{$oid_status};
+my $mtu = $result->{$oid_if_mtu};
 my ($nagios_retcode, $nagios_message);
+my $message_interface = "Interface ".$np->opts->if." (mtu=".$mtu.")";
 
 if($if_status == $IF_UP) {
   $nagios_retcode = OK;
-  $nagios_message = "Interface ".$np->opts->if." is UP";
+  $nagios_message = $message_interface." is UP";
 } elsif($if_status == $IF_DOWN || $if_status == $IF_TESTING) {
   $nagios_retcode = CRITICAL;
-  $nagios_message = "Interface ".$np->opts->if." is DOWN"
+  $nagios_message = $message_interface." is DOWN";
 }
 
 $np->nagios_exit($nagios_retcode, $nagios_message);

@@ -103,7 +103,7 @@ if (!defined($if_names)) {
 my ($key, $value,$idx) = (0,0,-1);
 while (($key, $value) = each(%{$if_names})) {
   if($value eq $np->opts->if) {
-    $key =~ /.*\.([0-9+])/;
+    $key =~ /.*\.([0-9]+)/;
     $idx = $1;
   }
 }

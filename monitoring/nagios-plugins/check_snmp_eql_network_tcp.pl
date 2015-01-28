@@ -87,6 +87,7 @@ $session->translate(Net::SNMP->TRANSLATE_NONE);
 my $result = $session->get_request(-varbindlist => [
 	$oid_tcp_active_opens,
 	$oid_tcp_passive_opens,
+	$oid_tcp_att_failed,
 	$oid_tcp_cur_estab,
 	$oid_tcp_in_segs,
 	$oid_tcp_out_segs,
@@ -112,7 +113,7 @@ $np->add_perfdata(
 );
 
 $np->add_perfdata(
-  label => 'TCP attempt fails',
+  label => 'TCP attempts failed',
   value => $result->{$oid_tcp_att_failed},
   uom   => 'c',
 );

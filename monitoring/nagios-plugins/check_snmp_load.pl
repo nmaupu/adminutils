@@ -88,7 +88,7 @@ my ($session, $error) = Net::SNMP->session(
       -port      => $np->opts->port,
       -community => $np->opts->community,
       -version   => '2',
-      -timeout   => 10,
+      -timeout   => 3,
     );
 
 if (!defined($session)) {
@@ -96,14 +96,20 @@ if (!defined($session)) {
 }
 
 ## OIDs
-my $oid_load  = '.1.3.6.1.4.1.2021.10.1.3';
+my $oid_load1  = '.1.3.6.1.4.1.2021.10.1.3.1';
+my $oid_load5  = '.1.3.6.1.4.1.2021.10.1.3.2';
+my $oid_load15 = '.1.3.6.1.4.1.2021.10.1.3.3';
 
 $session->translate(Net::SNMP->TRANSLATE_NONE);
-my $result = $session->get_table(-baseoid => $oid_load);
+my $result = $session->get_request(-varbindlist => [$oid_load1, $oid_load5, $oid_load15]);
 
-my $load1  = $result->{"${oid_load}.1"};
-my $load5  = $result->{"${oid_load}.2"};
-my $load15 = $result->{"${oid_load}.3"};
+if (!defined($result)) {
+  $np->nagios_die("Error getting values from SNMP, timeout reaching host.\n");
+}
+
+my $load1  = $result->{$oid_load1};
+my $load5  = $result->{$oid_load5};
+my $load15 = $result->{$oid_load15};
 
 
 $np->add_perfdata(

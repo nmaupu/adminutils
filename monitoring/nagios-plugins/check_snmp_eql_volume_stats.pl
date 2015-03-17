@@ -176,7 +176,7 @@ if ($oid_suffix eq "-1") {
     uom   => 'c',
   );
   
-  $np->nagios_exit(OK, "No message");
+  $np->nagios_exit(OK, "-");
 }
 
 __END__

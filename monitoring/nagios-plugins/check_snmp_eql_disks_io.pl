@@ -137,6 +137,6 @@ while (($key, $value) = each(%{members_info})) {
   }
 }
 
-$np->nagios_exit(OK, "No message");
+$np->nagios_exit(OK, "-");
 
 __END__

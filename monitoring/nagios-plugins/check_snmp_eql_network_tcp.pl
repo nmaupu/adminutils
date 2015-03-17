@@ -154,6 +154,6 @@ $np->add_perfdata(
   uom   => 'c',
 );
 
-$np->nagios_exit(OK, "no message");
+$np->nagios_exit(OK, "-");
 
 __END__

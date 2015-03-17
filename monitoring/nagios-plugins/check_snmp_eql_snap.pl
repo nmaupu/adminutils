@@ -22,11 +22,14 @@
 ####################
 #
 # help: ./check_snmp_eql_snap -h
+## Requirements : Number::Bytes::Human
+## Can be installed under redhat with something like : yum install perl-Number-Bytes-Human
 
 use strict;
 use Net::SNMP;
 use Getopt::Long;
 use Nagios::Plugin;
+use Number::Bytes::Human qw(format_bytes);
 use Data::Dumper;
 
 my $NAME="check_snmp_eql_snap";
@@ -163,16 +166,18 @@ if ($idx eq "-1") {
 
   ## Exit status and message handling
   my $exit_code = OK;
-  my $message = "Snapshot space for volume ".$np->opts->volume. " is ".$snap_percent_used."%";
-  if($snap_percent_used >= $np->opts->warning) {
-    $exit_code = WARNING;
-    $message = $message." (>=".$np->opts->warning."%)";
-  } elsif($snap_percent_used >= $np->opts->critical) {
+  my $used_human = format_bytes($snap_used_space * 1048576); ## 1048576 = 1024*1024
+  my $total_human = format_bytes($snap_total_space * 1048576);
+  my $message = "Snapshot space for volume ".$np->opts->volume. " : ".$used_human."/".$total_human." - ".$snap_percent_used."% used";
+  if($snap_percent_used >= $np->opts->critical) {
     $exit_code = CRITICAL;
-    $message = $message." (>=".$np->opts->warning."%)";
+    $message .= " (>=".$np->opts->warning."%)";
+  } elsif($snap_percent_used >= $np->opts->warning) {
+    $exit_code = WARNING;
+    $message .= " (>=".$np->opts->warning."%)";
   } else {
     $exit_code = OK;
-    $message = $message." (<".$np->opts->warning."%)";
+    $message .= " (<".$np->opts->warning."%)";
   }
 
   $np->nagios_exit($exit_code, $message);

@@ -19,7 +19,7 @@
 ## check_snmp_mysql is a script to monitor some mysql metrics through snmp
 ## SNMPd must provide the following OID for this script to work as expected : .1.3.6.1.4.1.111111.1
 ## e.g. exec .1.3.6.1.4.1.111111.1 MySQLParameters /opt/scripts/check_mysql_status.sh
-## Author: nmaupu@gmail.com
+## Author: nmaupu_at_gmail_dot_com
 ## Version: 1.0
 ####################
 #

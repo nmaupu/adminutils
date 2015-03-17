@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ####################
 ## check_snmp_eql_member_stats is script to monitor member stats on an EQL storage array
-## Author: nmaupu@gmail.com
+## Author: nmaupu_at_gmail_dot_com
 ## Version: 1.0
 ####################
 #

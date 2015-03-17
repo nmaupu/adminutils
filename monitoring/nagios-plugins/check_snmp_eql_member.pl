@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ####################
 ## check_snmp_eql_member is script to monitor member of Equallogic SAN groups through SNMP
-## Author: nmaupu@gmail.com
+## Author: nmaupu_at_gmail_dot_com
 ## Version: 1.0
 ####################
 #

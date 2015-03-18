@@ -140,7 +140,7 @@ if ($idx eq "-1") {
   $session->translate(Net::SNMP->TRANSLATE_NONE);
   my $result = $session->get_request(-varbindlist => \@oids);
 
-  print Dumper($result);
+  #print Dumper($result);
 
   if (!defined($result)) {
     $np->nagios_die("Error getting values from SNMP, timeout reaching host.\n");

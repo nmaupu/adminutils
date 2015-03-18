@@ -181,10 +181,10 @@ if ($idx eq "-1") {
   ## Exit status and message handling
   my $exit_code = OK;
   my $message = "Number of iscsi sessions for the volume ".$np->opts->volume." (# SAN member(s): ".$nb_san_members.")";
-  if($np->opts->sessions > $num_con) {
+  if($np->opts->sessions < $num_con) {
     $exit_code = WARNING;
     $message = $message." is more than expected, please check !";
-  } elsif($np->opts->sessions < $num_con) {
+  } elsif($np->opts->sessions > $num_con) {
     $exit_code = CRITICAL;
     $message = $message." is less than expected. One or more sessions are dead, please check !";
   } else {

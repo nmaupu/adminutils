@@ -108,7 +108,7 @@ while (($key, $value) = each(%{members_info})) {
   }
   
   my ($k, $v);
-  while (($k, $v) = each($result_io_read)) {
+  while (($k, $v) = each(%$result_io_read)) {
     $k =~ /.*\.([0-9]+)/;
     my $disk_num = $1;
     $np->add_perfdata(
@@ -117,7 +117,7 @@ while (($key, $value) = each(%{members_info})) {
       uom   => 'c',
     );
   }
-  while (($k, $v) = each($result_io_written)) {
+  while (($k, $v) = each(%$result_io_written)) {
     $k =~ /.*\.([0-9]+)/;
     my $disk_num = $1;
     $np->add_perfdata(
@@ -126,7 +126,7 @@ while (($key, $value) = each(%{members_info})) {
       uom   => 'c',
     );
   }
-  while (($k, $v) = each($result_io_busy)) {
+  while (($k, $v) = each(%$result_io_busy)) {
     $k =~ /.*\.([0-9]+)/;
     my $disk_num = $1;
     $np->add_perfdata(

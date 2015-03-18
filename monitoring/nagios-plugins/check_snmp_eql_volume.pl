@@ -175,7 +175,7 @@ if ($idx eq "-1") {
 
   ## Exit status and message handling
   my $exit_code = OK;
-  my $message = "# iSCSI sessions for volume ".$np->opts->volume." : ".$num_con." / ".$nb_san_members." SAN members";
+  my $message = $np->opts->volume." / ".$num_con." iSCSI sessions / ".$nb_san_members." SAN(s)";
   #my $message = "Number of iscsi sessions for the volume ".$np->opts->volume." (# SAN member(s): ".$nb_san_members.")";
   #if($np->opts->sessions < $num_con) {
   #  $exit_code = WARNING;

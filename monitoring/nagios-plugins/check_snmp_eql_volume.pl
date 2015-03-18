@@ -34,7 +34,7 @@ my $VERSION="1.0";
 
 ## Opts
 my $np = Nagios::Plugin->new(
-  usage => "Usage: $NAME [--host|-H <host>] [--port|-p <port>] [--community|-C <community>] [--volume|-d <volume-name>] [--sessions|s <sessions>]",
+  usage => "Usage: $NAME [--host|-H <host>] [--port|-p <port>] [--community|-C <community>] [--volume|-d <volume-name>]",
   version => $VERSION,
   blurb => 'Check Equallogic volume status through SNMP'
 );
@@ -57,11 +57,6 @@ $np->add_arg(
 $np->add_arg(
   spec     => 'volume|d=s',
   help     => 'Volume name to check',
-  required => 1,
-);
-$np->add_arg(
-  spec     => 'sessions|s=i',
-  help     => 'Expected number of iSCSI sessions to the volume',
   required => 1,
 );
 
@@ -180,17 +175,18 @@ if ($idx eq "-1") {
 
   ## Exit status and message handling
   my $exit_code = OK;
-  my $message = "Number of iscsi sessions for the volume ".$np->opts->volume." (# SAN member(s): ".$nb_san_members.")";
-  if($np->opts->sessions < $num_con) {
-    $exit_code = WARNING;
-    $message = $message." is more than expected, please check !";
-  } elsif($np->opts->sessions > $num_con) {
-    $exit_code = CRITICAL;
-    $message = $message." is less than expected. One or more sessions are dead, please check !";
-  } else {
-    $exit_code = OK;
-    $message = $message." is OK";
-  }
+  my $message = "# iSCSI sessions for volume ".$np->opts->volume." : ".$num_con." / ".$nb_san_members." SAN members";
+  #my $message = "Number of iscsi sessions for the volume ".$np->opts->volume." (# SAN member(s): ".$nb_san_members.")";
+  #if($np->opts->sessions < $num_con) {
+  #  $exit_code = WARNING;
+  #  $message = $message." is more than expected, please check !";
+  #} elsif($np->opts->sessions > $num_con) {
+  #  $exit_code = CRITICAL;
+  #  $message = $message." is less than expected. One or more sessions are dead, please check !";
+  #} else {
+  #  $exit_code = OK;
+  #  $message = $message." is OK";
+  #}
 
   $np->nagios_exit($exit_code, $message);
 }

@@ -102,7 +102,7 @@ if (!defined($volumes)) {
 
 #print(Dumper($volumes));
 
-my ($key, $value, $idx) = (0,0,-1);
+my ($key, $value, $idx) = (0,0,"-1");
 while (($key, $value) = each(%{$volumes})) {
   if($value eq $np->opts->volume) {
     $key =~ /.*\.([0-9]+\.[0-9]+)/;
@@ -117,7 +117,8 @@ if ($idx eq "-1") {
   ## Getting infos of the specified volume
   my $oid_nb_snaps_online = "1.3.6.1.4.1.12740.5.1.7.7.1.16.".$idx;
   my $oid_nb_snaps = "1.3.6.1.4.1.12740.5.1.7.7.1.5.".$idx;
-  my $oid_res_space = "1.3.6.1.4.1.12740.5.1.7.1.1.10.".$idx;
+  my $oid_res_space_percent = "1.3.6.1.4.1.12740.5.1.7.1.1.10.".$idx; ## Give percent of total space - maximum space for snapshot
+  my $oid_res_space = "1.3.6.1.4.1.12740.5.1.7.7.1.2.".$idx;
   my $oid_free_space = "1.3.6.1.4.1.12740.5.1.7.7.1.3.".$idx;
   my $oid_volume_size = "1.3.6.1.4.1.12740.5.1.7.1.1.8.".$idx;
 
@@ -125,6 +126,7 @@ if ($idx eq "-1") {
   my $result = $session->get_request(-varbindlist => [
     $oid_nb_snaps_online,
     $oid_nb_snaps,
+    $oid_res_space_percent,
     $oid_res_space,
     $oid_free_space,
     $oid_volume_size
@@ -138,10 +140,14 @@ if ($idx eq "-1") {
   
   ## Some computations
   my $vol_size = $result->{$oid_volume_size};
-  my $snap_percent = $result->{$oid_res_space};
-  my $snap_total_space = $vol_size * $snap_percent / 100;
-  my $snap_used_space = $snap_total_space - $result->{$oid_free_space};
-  my $snap_percent_used = sprintf("%.1f", ($snap_used_space * 100) / $snap_total_space);
+  my $snap_space_percent = $result->{$oid_res_space_percent};
+  my $snap_space_max = ($vol_size * $snap_space_percent) / 100;
+  my $snap_res_space = $result->{$oid_res_space};
+  my $snap_used_space = $snap_res_space - $result->{$oid_free_space};
+  my $snap_percent_used = 0;
+  if ($snap_space_max > 0) {
+    $snap_percent_used = sprintf("%.1f", ($snap_used_space * 100) / $snap_space_max);
+  }
 
   $np->add_perfdata(
     label => 'nb_snaps_online',
@@ -154,8 +160,13 @@ if ($idx eq "-1") {
     uom   => 'c',
   );
   $np->add_perfdata(
-    label => 'snap_total_space',
-    value => $snap_total_space,
+    label => 'snap_space_max',
+    value => $snap_space_max,
+    uom   => 'MB',
+  );
+  $np->add_perfdata(
+    label => 'snap_res_space',
+    value => $snap_res_space,
     uom   => 'MB',
   );
   $np->add_perfdata(
@@ -167,7 +178,7 @@ if ($idx eq "-1") {
   ## Exit status and message handling
   my $exit_code = OK;
   my $used_human = format_bytes($snap_used_space * 1048576); ## 1048576 = 1024*1024
-  my $total_human = format_bytes($snap_total_space * 1048576);
+  my $total_human = format_bytes($snap_space_max * 1048576);
   my $message = "Snapshot space for volume ".$np->opts->volume. " : ".$used_human."/".$total_human." - ".$snap_percent_used."% used";
   if($snap_percent_used >= $np->opts->critical) {
     $exit_code = CRITICAL;

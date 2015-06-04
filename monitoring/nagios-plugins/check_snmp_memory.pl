@@ -115,7 +115,7 @@ my $swap_total    = $result->{$oid_swtotal} ? $result->{$oid_swtotal}*1024 : 0;
 my $swap_free     = $result->{$oid_swfree} ? $result->{$oid_swfree}*1024 : 0;
 my $swap_used     = $swap_total - $swap_free;
 my $ram_bufs      = $ram_shared + $ram_buffered + $ram_cached;
-my $ram_used      = $ram_total - $ram_free - $ram_bufs;
+my $ram_used      = $ram_total - $ram_free + $ram_bufs;
 
 my $percent_used  = $ram_total != 0 ? sprintf("%.2f", ($ram_used * 100) / $ram_total) : "undef";
 
